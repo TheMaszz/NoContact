@@ -1,12 +1,12 @@
 "use client";
 
 import { Heart, HeartHandshake, Sparkles } from "lucide-react";
-import {  QUICK_MOODS } from "../constant/constant";
+import { QUICK_MOODS } from "../constant/constant";
 
 export default function Home() {
   return (
     <main
-      className="flex min-h-screen flex-col items-center justify-center p-6 bg-[#FFF9FA]"
+      className="flex flex-1 flex-col items-center justify-center p-6 bg-[#FFF9FA]"
       style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
     >
       <div className="grid grid-cols-1 md:grid-cols-2 grid-rows-2 gap-4 w-full max-w-4xl md:h-[500px]">

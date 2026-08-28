@@ -17,13 +17,11 @@ export default function RootLayout({ children }) {
           rel="stylesheet"
         />
       </head>
-      <body className="bg-gray-50">
+      <body className="bg-[#FFF9FA]">
         <InitGuard>
           <div className="flex flex-col min-h-screen">
             <Header />
-            <div className="flex-1 flex flex-col">
-              {children}
-            </div>
+            <div className="flex-1 flex flex-col">{children}</div>
             <Footer />
           </div>
         </InitGuard>

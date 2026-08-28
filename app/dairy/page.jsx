@@ -17,7 +17,7 @@ export default function Page() {
 
   return (
     <main
-      className="relative flex min-h-screen flex-col items-center justify-center p-6 bg-[#FFF9FA] overflow-hidden"
+      className="relative flex flex-1 flex-col items-center justify-center p-6 bg-[#FFF9FA] overflow-hidden"
       style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
     >
       {/* ambient blobs */}
@@ -29,7 +29,7 @@ export default function Page() {
 
         {/* header */}
         <div className="flex items-center gap-2 mb-5">
-          <span className="flex items-center justify-center w-9 h-9 rounded-full bg-gradient-to-br from-[#8FCB9A] to-[#C9B6FF] shadow-sm text-base">
+          <span className="flex items-center justify-center w-9 h-9 rounded-full  shadow-sm text-base">
             🌱
           </span>
           <p className="text-[#2E1F3A] font-medium text-sm">บันทึกหัวใจประจำวัน</p>
@@ -75,7 +75,7 @@ export default function Page() {
           <textarea
             value={note}
             onChange={(e) => setNote(e.target.value)}
-            placeholder="วันนี้ไปเจอเรื่องดีๆอะไรมา"
+            placeholder=""
             maxLength={280}
             className="textarea w-full min-h-[100px] rounded-2xl bg-[#FCF8FA] border border-[#F1E4EA] focus:border-[#FF6F91] focus:ring-2 focus:ring-[#FFD9E2] focus:outline-none text-[#2E1F3A] text-sm p-4 resize-none placeholder:text-[#B8ABC4] transition-all duration-200"
           />
