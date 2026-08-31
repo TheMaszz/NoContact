@@ -1,18 +1,14 @@
-import {
-  Heart,
-  Calendar,
-  Share2,
-  Flag,
-} from "lucide-react";
+﻿import { Calendar, Flag, Heart, Share2, type LucideIcon } from "lucide-react";
+import type { GoalOption, QuestionItem } from "@/types";
 
-export const STEP_META = [
+export const STEP_META: Array<{ label: string; icon: LucideIcon }> = [
   { label: "บริบทความสัมพันธ์", icon: Heart },
   { label: "ระยะเวลาและความเสี่ยง", icon: Calendar },
   { label: "โซเชียลมีเดีย", icon: Share2 },
   { label: "เป้าหมาย", icon: Flag },
 ];
 
-export const STEP_QUESTIONS = {
+export const STEP_QUESTIONS: Record<number, QuestionItem[]> = {
   1: [
     {
       key: "status",
@@ -51,7 +47,7 @@ export const STEP_QUESTIONS = {
     {
       key: "socialStatus",
       label: "สถานะโซเชียลในปัจจุบัน",
-      options: ["บล็อกหมดแล้ว", "อันฟอลแล้ว","ยังฟอลกันอยู่", "แอบส่องเรื่อยๆ"],
+      options: ["บล็อกหมดแล้ว", "อันฟอลแล้ว", "ยังฟอลกันอยู่", "แอบส่องเรื่อยๆ"],
     },
     {
       key: "trigger",
@@ -61,7 +57,7 @@ export const STEP_QUESTIONS = {
   ],
 };
 
-export const GOALS = [
+export const GOALS: GoalOption[] = [
   { id: "cutoff", emoji: "🛑", title: "Cut-off เด็ดขาด", desc: "ตัดใจ 100% ไม่เอาอีกแล้ว" },
   { id: "heal", emoji: "🩹", title: "ฮีลใจดึงสติ", desc: "ไม่อยากดิ่งและเผลอทักไป" },
   { id: "selflove", emoji: "🕊️", title: "Self-Love", desc: "เรียนรู้ที่จะมีความสุขด้วยตัวเอง" },
