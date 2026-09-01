@@ -114,7 +114,6 @@ export default function Page() {
     return (
       <main
         className="relative flex flex-1 flex-col items-center justify-center p-6 bg-[#FFF9FA] overflow-hidden"
-        style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
       >
         <div className="pointer-events-none absolute -top-20 -right-16 w-72 h-72 bg-[#EDE4FF] rounded-full blur-3xl opacity-60" />
         <div className="pointer-events-none absolute -bottom-16 -left-16 w-64 h-64 bg-[#FFE1E9] rounded-full blur-3xl opacity-60" />
@@ -205,7 +204,6 @@ export default function Page() {
   return (
     <main
       className="relative flex flex-1 flex-col items-center justify-center p-6 bg-[#FFF9FA] overflow-hidden"
-      style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
     >
       <div className="pointer-events-none absolute -top-20 -right-16 w-72 h-72 bg-[#EDE4FF] rounded-full blur-3xl opacity-60" />
       <div className="pointer-events-none absolute -bottom-16 -left-16 w-64 h-64 bg-[#FFE1E9] rounded-full blur-3xl opacity-60" />

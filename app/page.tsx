@@ -1,9 +1,17 @@
 "use client";
 
-import { Heart, HeartHandshake, Sparkles, Check, Wind, Target } from "lucide-react";
+import {
+  Heart,
+  HeartHandshake,
+  Sparkles,
+  Check,
+  Wind,
+  Target,
+} from "lucide-react";
 import Link from "next/link";
 import { QUICK_MOODS } from "@/constant/constant";
 import { useAppStore } from "@/lib/store";
+import BackfillModal from "@/components/BackfillModal";
 
 export default function Home() {
   const { checkInToday, getTodayEntry, calculateStreak } = useAppStore();
@@ -12,8 +20,12 @@ export default function Home() {
   const todayEntry = getTodayEntry();
   const isCheckedIn = !!todayEntry?.checkedIn;
 
-  const nextMilestone = streak === 0 ? 7 : Math.ceil((streak + 1) / 7) * 7;
-  const progress = Math.min(streak / nextMilestone, 1);
+  const daysIntoMission = streak === 0 ? 0 : streak % 7 === 0 ? 7 : streak % 7;
+  const missionNumber = Math.ceil((streak + 1) / 7) || 1;
+  const progress = daysIntoMission / 7;
+  const daysRemaining = 7 - daysIntoMission;
+  const nextMilestone = streak + daysRemaining;
+
   const radius = 54;
   const circumference = 2 * Math.PI * radius;
   const dashOffset = circumference * (1 - progress);
@@ -21,7 +33,6 @@ export default function Home() {
   return (
     <main
       className="flex flex-1 flex-col items-center justify-center p-6 bg-[#FFF9FA] min-h-screen"
-      style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
     >
       <div className="grid grid-cols-1 md:grid-cols-2 grid-rows-2 gap-4 w-full max-w-4xl md:h-[500px]">
         {/* Streak Hero — the one bold element on the page */}
@@ -34,19 +45,27 @@ export default function Home() {
               คุณไม่ได้ติดต่อมาแล้ว
             </div>
 
-            {/* Progress ring around the streak number */}
+            {/* Progress ring — fills over each 7-day mission, resets on the next */}
             <div className="relative w-40 h-40 mx-auto md:mx-0">
               <svg
                 viewBox="0 0 128 128"
                 className="w-full h-full -rotate-90 motion-reduce:transition-none"
               >
                 <circle
-                  cx="64" cy="64" r={radius}
-                  fill="none" stroke="rgba(255,255,255,0.25)" strokeWidth="8"
+                  cx="64"
+                  cy="64"
+                  r={radius}
+                  fill="none"
+                  stroke="rgba(255,255,255,0.25)"
+                  strokeWidth="8"
                 />
                 <circle
-                  cx="64" cy="64" r={radius}
-                  fill="none" stroke="white" strokeWidth="8"
+                  cx="64"
+                  cy="64"
+                  r={radius}
+                  fill="none"
+                  stroke="white"
+                  strokeWidth="8"
                   strokeLinecap="round"
                   strokeDasharray={circumference}
                   strokeDashoffset={dashOffset}
@@ -60,7 +79,9 @@ export default function Home() {
                 >
                   {streak}
                 </p>
-                <p className="text-white/75 text-xs mt-1">วัน · {streak * 24} ชม.</p>
+                <p className="text-white/75 text-xs mt-1">
+                  วัน · {streak * 24} ชม.
+                </p>
               </div>
             </div>
           </div>
@@ -113,7 +134,7 @@ export default function Home() {
           <div className="grid grid-cols-4 gap-2 mb-5">
             {QUICK_MOODS.map(({ id, emoji, label }) => (
               <Link
-                key={label}
+                key={id}
                 href={`/diary?mood=${encodeURIComponent(id)}`}
                 aria-label={`บันทึกอารมณ์: ${label}`}
                 className="flex flex-col items-center gap-1.5 py-3 rounded-2xl border border-[#F1E4EA] hover:border-[#FF6F91] hover:bg-[#FFF0F3] active:scale-95 transition-all duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#FF6F91] focus-visible:outline-offset-2"
@@ -138,12 +159,12 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Next milestone — replaces the static quote */}
+        {/* Next milestone */}
         <div className="rounded-[2rem] bg-[#FCF8FA] border border-[#F1E4EA] p-6 flex flex-col justify-center gap-3">
           <div className="flex items-center gap-2">
             <Target className="w-4 h-4 text-[#C9B6FF]" />
             <p className="text-sm font-medium text-[#2E1F3A]">
-              เป้าหมายถัดไป: {nextMilestone} วัน
+              ภารกิจที่ {missionNumber} · วันที่ {daysIntoMission}/7
             </p>
           </div>
           <div className="h-2 rounded-full bg-[#F1E4EA] overflow-hidden">
@@ -154,7 +175,9 @@ export default function Home() {
           </div>
           <p className="text-xs text-[#8B7E9C] flex items-center gap-1.5">
             <Wind className="w-3.5 h-3.5" />
-            อีก {nextMilestone - streak} วัน ก็ถึงเป้าหมายถัดไปแล้ว
+            {daysRemaining === 0
+              ? "วันนี้ครบภารกิจแล้ว เก่งมากนะ!"
+              : `อีก ${daysRemaining} วัน ก็ถึงเป้าหมายถัดไปแล้ว (วันที่ ${nextMilestone})`}
           </p>
         </div>
       </div>
@@ -177,6 +200,8 @@ export default function Home() {
       </div>
 
       <div className="h-20" />
+
+      <BackfillModal />
     </main>
   );
 }

@@ -5,7 +5,6 @@ const Loading = () => {
   return (
     <div
       className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#FFF9FA] overflow-hidden"
-      style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
     >
       <div className="pointer-events-none absolute -top-20 -left-16 w-72 h-72 bg-[#FFE1E9] rounded-full blur-3xl opacity-60" />
       <div className="pointer-events-none absolute -bottom-16 -right-16 w-64 h-64 bg-[#EDE4FF] rounded-full blur-3xl opacity-60" />

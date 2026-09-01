@@ -1,6 +1,10 @@
 ﻿import { GoogleGenAI, Schema, Type } from "@google/genai";
 import { NextResponse } from "next/server";
-import type { AiAnalysisResponse, AnalysisRequestBody, UserProfile } from "@/types";
+import type {
+  AiAnalysisResponse,
+  AnalysisRequestBody,
+  UserProfile,
+} from "@/types";
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
@@ -9,11 +13,13 @@ const responseSchema: Schema = {
   properties: {
     empathyMessage: {
       type: Type.STRING,
-      description: "ข้อความแสดงความเข้าใจในอารมณ์ความรู้สึกของผู้ใช้ 1-2 ประโยค",
+      description:
+        "ข้อความแสดงความเข้าใจในอารมณ์ความรู้สึกของผู้ใช้ 1-2 ประโยค",
     },
     realityCheck: {
       type: Type.STRING,
-      description: "การเตือนสติด้วยความจริงอย่างอ่อนโยนและคมคาย อิงจากบริบทของผู้ใช้",
+      description:
+        "การเตือนสติด้วยความจริงอย่างอ่อนโยนและคมคาย อิงจากบริบทของผู้ใช้",
     },
     suggestedAction: {
       type: Type.STRING,
@@ -30,28 +36,49 @@ const responseSchema: Schema = {
 
 export async function POST(request: Request) {
   try {
-    const { userMessage, userProfile }: AnalysisRequestBody = await request.json();
+    const { userMessage, userProfile }: AnalysisRequestBody =
+      await request.json();
 
     if (!userMessage) {
-      return NextResponse.json({ error: "User message is required" }, { status: 400 });
+      return NextResponse.json(
+        { error: "User message is required" },
+        { status: 400 },
+      );
     }
 
     const normalizedUserProfile = (userProfile ?? {}) as UserProfile;
     const prompt = `
-      คุณคือระบบ AI ดึงสติและฮีลใจสำหรับแอป No Contact
-      หน้าที่ของคุณคือชะลออารมณ์ชั่ววูบของผู้ใช้ และให้สติด้วยความจริงอย่างอ่อนโยนแต่เด็ดขาด
+        คุณคือระบบ AI ดึงสติและฮีลใจสำหรับแอป No Contact
+        หน้าที่ของคุณคือชะลออารมณ์ชั่ววูบของผู้ใช้ และให้สติด้วยความจริงอย่างอ่อนโยนแต่เด็ดขาด
+        ก่อนอื่นเลย ต้องประเมินว่าข้อความนี้เป็นเรื่อง "อยากทักหาแฟนเก่า" ตามปกติ หรือมีสัญญาณของภาวะวิกฤตที่รุนแรงกว่านั้น (ดูกฎข้อสุดท้าย)
 
-      [ บริบทส่วนตัวของผู้ใช้ ]
-      - สถานะความสัมพันธ์เดิม: ${normalizedUserProfile.status ?? "ไม่ระบุ"} (ระยะเวลา: ${normalizedUserProfile.duration ?? "ไม่ระบุ"})
-      - ฝ่ายที่จบความสัมพันธ์: ${normalizedUserProfile.initiator ?? "ไม่ระบุ"}
-      - ระยะเวลาที่เลิกกันมา: ${normalizedUserProfile.timeSince ?? "ไม่ระบุ"}
-      - ช่องทางที่เสี่ยงทักที่สุด: ${normalizedUserProfile.riskyApp ?? "โซเชียลมีเดีย"}
-      - สถานะโซเชียล: ${normalizedUserProfile.socialStatus ?? "ไม่ระบุ"}
-      - สิ่งกระตุ้นใจ: ${normalizedUserProfile.trigger ?? "ความเหงา"}
-      - เป้าหมายหลักของผู้ใช้: ${normalizedUserProfile.goal === "cutoff" ? "ตัดใจเด็ดขาด ไม่เอาอีกแล้ว" : "ฮีลใจและดึงสติ"}
+        [ บริบทส่วนตัวของผู้ใช้ ]
+        - สถานะความสัมพันธ์เดิม: ${normalizedUserProfile.status ?? "ไม่ระบุ"} (ระยะเวลา: ${normalizedUserProfile.duration ?? "ไม่ระบุ"})
+        - ฝ่ายที่จบความสัมพันธ์: ${normalizedUserProfile.initiator ?? "ไม่ระบุ"}
+        - ระยะเวลาที่เลิกกันมา: ${normalizedUserProfile.timeSince ?? "ไม่ระบุ"}
+        - ช่องทางที่เสี่ยงทักที่สุด: ${normalizedUserProfile.riskyApp ?? "โซเชียลมีเดีย"}
+        - สถานะโซเชียล: ${normalizedUserProfile.socialStatus ?? "ไม่ระบุ"}
+        - สิ่งกระตุ้นใจ: ${normalizedUserProfile.trigger ?? "ความเหงา"}
+        - เป้าหมายหลักของผู้ใช้: ${normalizedUserProfile.goal === "cutoff" ? "ตัดใจเด็ดขาด ไม่เอาอีกแล้ว" : "ฮีลใจและดึงสติ"}
 
-      [ ข้อความที่ผู้ใช้กำลังจะส่งหาแฟนเก่า / ระบายออกมารอบนี้ ]
-      "${userMessage}"
+        [ ข้อความที่ผู้ใช้กำลังจะส่งหาแฟนเก่า / ระบายออกมารอบนี้ ]
+        "${userMessage}"
+
+        [ วิธีเติมแต่ละช่องของผลลัพธ์ ]
+        - empathyMessage: ยอมรับความรู้สึกตรงหน้าก่อนเสมอ (เหงา/คิดถึง/น้อยใจ) โดยไม่ตัดสิน 1-2 ประโยค
+        - realityCheck: เตือนสติด้วยความจริง อ้างอิงบริบทของผู้ใช้จริงๆ (เช่น เป้าหมายที่ตั้งไว้ หรือสิ่งที่มักเกิดขึ้นหลังทักไปทาง ${normalizedUserProfile.riskyApp ?? "โซเชียล"}) อ่อนโยนแต่ตรงไปตรงมา ไม่อ้อมค้อม
+        - suggestedAction: กิจกรรมชะลออารมณ์ที่ทำได้ทันทีตอนนี้เลย 1 อย่าง (เช่น ดื่มน้ำ, วางโทรศัพท์ 5 นาที, เขียนใส่สมุดแทน) เจาะจง ไม่พูดลอยๆ
+        - riskLevel: ประเมินจากข้อความว่าผู้ใช้ใกล้จะกดส่งแค่ไหน
+          - "high": มีคำบอกใบ้ว่ากำลังจะส่งจริงๆ ("กำลังพิมพ์อยู่", "จะกดส่งแล้ว"), หรืออารมณ์ท่วมท้นจนควบคุมไม่ได้
+          - "medium": คิดถึง/อยากทัก แต่ยังลังเล ยังไม่ได้ตัดสินใจ
+          - "low": แค่ระบายความรู้สึก ไม่มีสัญญาณว่าจะลงมือทำ
+
+        [ กฎสำคัญที่สุด — สัญญาณวิกฤตที่เกินกว่าเรื่องแฟนเก่า ]
+        ถ้าข้อความมีสัญญาณของการทำร้ายตัวเอง ความคิดอยากตาย หรืออันตรายร้ายแรงอื่นๆ ที่ไม่ใช่แค่ "อยากทักหาแฟนเก่า":
+        - ตั้ง riskLevel เป็น "high" เสมอ
+        - ใน realityCheck ให้พูดตรงๆ อย่างอ่อนโยนว่าเรื่องนี้หนักเกินกว่าที่แชทนี้จะช่วยได้เต็มที่
+        - ใน suggestedAction ให้แนะนำให้ติดต่อคนที่ไว้ใจได้หรือสายด่วนสุขภาพจิตทันที แทนกิจกรรมชะลออารมณ์ทั่วไป
+        - ห้ามพยายามแก้ปัญหานั้นด้วยตัวเอง หรือเบี่ยงกลับไปพูดเรื่องแฟนเก่าเป็นหลัก
     `;
 
     const response = await ai.models.generateContent({
@@ -80,6 +107,9 @@ export async function POST(request: Request) {
       );
     }
 
-    return NextResponse.json({ error: "Failed to analyze message" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to analyze message" },
+      { status: 500 },
+    );
   }
 }

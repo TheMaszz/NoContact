@@ -55,7 +55,6 @@ export default function Page() {
   return (
     <main
       className="relative flex flex-1 flex-col items-center justify-center overflow-hidden bg-[#FFF9FA] p-6"
-      style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
     >
       <div className="pointer-events-none absolute -right-16 -top-20 h-72 w-72 rounded-full bg-[#EDE4FF] opacity-60 blur-3xl" />
       <div className="pointer-events-none absolute -bottom-16 -left-16 h-64 w-64 rounded-full bg-[#FFE1E9] opacity-60 blur-3xl" />

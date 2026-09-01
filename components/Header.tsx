@@ -20,7 +20,6 @@ export default function Header() {
                    bg-white/90 backdrop-blur-md border border-[#F1E4EA]
                    rounded-full shadow-[0_4px_20px_-4px_rgba(255,111,145,0.25)]
                    px-3 py-2"
-        style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
       >
         {/* Back button (visible when not on /) */}
         {showBack && (
@@ -96,7 +95,6 @@ export default function Header() {
         <div
           className="mx-auto max-w-4xl mt-2 bg-white/95 backdrop-blur-md
                      border border-[#F1E4EA] rounded-3xl shadow-lg p-2 flex flex-col gap-1 md:hidden"
-          style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
         >
           <a href="/" className={navLink}>
             <Sparkles className="w-4 h-4" />

@@ -5,7 +5,6 @@ export default function Footer() {
     <footer className="w-full bg-[#FFF9FA] border-t border-[#F1E4EA]">
       <div
         className="max-w-4xl mx-auto px-4 py-2 flex flex-col sm:flex-row items-center justify-between gap-3"
-        style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
       >
         <div className="flex items-center gap-2 text-sm text-[#5B4B6A]">
           <span
